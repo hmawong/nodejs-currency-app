@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import currencies_name_symbol from './currencies-name-symbol';
-import { json, checkStatus } from './utils';
+import currencies_name_symbol from './utils/currencies_name_symbol';
+import { json, checkStatus } from './utils/utils';
+import CurrencyConverter from './currencyconverter';
+import CurrencyList from './currencylist';
 
 class ExchangeRate extends React.Component {
   constructor () {
@@ -12,8 +14,35 @@ class ExchangeRate extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this.getRatesData(this.state.base);
+  }
+
+  getRatesData = (base) => {
+    fetch(`https://alt-exchange-rate.herokuapp.com/latest?base=${base}`)
+      .then(checkStatus)
+      .then(json)
+      .then(data => {
+        if (data.error) {
+          throw new Error(data.error);
+        }
+
+        const rates = Object.keys(data.rates)
+          .filter(acronym => acronym !== base)
+          .map(acronym => ({
+            acronym,
+            rate: data.rates[acronym],
+            name: currencies_name_symbol[acronym].name,
+            symbol: currencies_name_symbol[acronym].symbol,
+          }))
+          this.setState({ rates });
+        })
+    .catch(error => console.error(error.message));
+  }
+
   changeBase = (event) => {
     this.setState({ base: event.target.value });
+    this.getRatesData(event.target.value);
   }
 
   render () {
@@ -21,13 +50,14 @@ class ExchangeRate extends React.Component {
 
     return (
       <React.Fragment>
-        <form className="p-3 bg-light form-inline justify-content-center">
-          <h3 className="mb-2">Base currency: <b className="mr-2">1</b></h3>
-          <select value={base} onChange={this.changeBase} className="form-control form-control-lg mb-2">
-            <option value="USD">USD</option>
-            <option value="USD">HKD</option>
+        <CurrencyConverter />
+        <form className="p-1 form-inline justify-content-center">
+          <h6 className="mb-1">Base currency</h6>
+          <select value={base} onChange={this.changeBase} className="form-control form-control-sm ml-2 mb-2">
+            {Object.keys(currencies_name_symbol).map(currencyAcronym => <option key={currencyAcronym} value={currencyAcronym}>{currencyAcronym}</option>)}
           </select>
         </form>
+        <CurrencyList base={base} rates={rates} />
       </React.Fragment>
     )
   }
