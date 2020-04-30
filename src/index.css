@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.social-media-icon {
+  font-size: 1.2rem;
+  text-decoration: none;
+  margin: 0 5px;
+}
