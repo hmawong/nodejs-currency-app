@@ -84,6 +84,17 @@ class CurrencyConverter extends React.Component {
     });
   }
 
+  swapBaseQuote = (event) => {
+    const baseAcronym = this.state.quoteAcronym;
+    const quoteAcronym = this.state.baseAcronym;
+    this.setState({
+      baseAcronym,
+      quoteAcronym,
+    });
+    this.getRate(baseAcronym, quoteAcronym);
+  }
+
+
   render() {
     const { baseAcronym, baseValue, quoteAcronym, quoteValue, loading } = this.state;
 
@@ -119,26 +130,31 @@ class CurrencyConverter extends React.Component {
             <h5>=</h5>
           </div>
           <div className="form-group col-md-5 mb-0">
-          <div className="row">
-            <div className="col-3">
-            <select value={quoteAcronym} onChange={this.changeQuoteAcronym} className="form-control form-control-sm mb-2" disabled={loading}>
-              {currencyOptions}
-            </select>
-            </div>
-            <div className="col-9">
-            <div className="input-group">
-              <div className="input-group-prepend">
-                <div className="input-group-text input-sm">{currencies_name_symbol[quoteAcronym].symbol}</div>
+            <div className="row">
+              <div className="col-3">
+                <select value={quoteAcronym} onChange={this.changeQuoteAcronym} className="form-control form-control-sm mb-2" disabled={loading}>
+                  {currencyOptions}
+                </select>
               </div>
-              <input id="quote" className="form-control form-control-sm" value={quoteValue} onChange={this.changeQuoteValue} type="number" />
+              <div className="col-9">
+                <div className="input-group">
+                  <div className="input-group-prepend">
+                    <div className="input-group-text input-sm">{currencies_name_symbol[quoteAcronym].symbol}</div>
+                  </div>
+                  <input id="quote" className="form-control form-control-sm" value={quoteValue} onChange={this.changeQuoteValue} type="number" />
+                </div>
+              </div>
             </div>
-            </div>
-          </div>
             <div className="col-12 text-center">
               <small className="text-secondary">{currencies_name_symbol[quoteAcronym].name}</small>
             </div>
           </div>
         </form>
+        <div className="text-center p-1 mb-2">
+          <button className="btn btn-outline-primary" onClick={this.swapBaseQuote}>
+            Swap
+          </button>
+        </div>
       </React.Fragment>
     )
   }
