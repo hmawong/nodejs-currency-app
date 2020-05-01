@@ -8,7 +8,7 @@ const Layout = (props) => {
         <div className="d-none d-sm-flex flex-grow-1">
           <div className="navbar-nav ml-auto flex-row">
             <a className="nav-item nav-link text-dark mr-3" href="/">Home</a>
-            <a className="nav-item nav-link text-dark" href="/histChart">Historical Rate Charts</a>
+            <a className="nav-item nav-link text-dark" href="/histChart">Historical Rate Chart</a>
           </div>
         </div>
       </nav>
